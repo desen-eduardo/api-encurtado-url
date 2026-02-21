@@ -2,22 +2,18 @@ import Shorturly from 'shorturly';
 import shortLinkEntity from '../model/shortLink.js';
 
 const shortlink = {
-   async getAll(req, res) {
-        res.status(200).json({
-            message:await shortLinkEntity.all()
-        });
-    },
-
+   
     async create(req, res) {
-        if (!req.body?.url) {
-            return res.status(400).json({
-                error: "O campo 'url' é obrigatório"
-            });
-        }
-
         try {
+            
+            if (!req.body?.url) {
+                return res.status(400).json({
+                    error: "O campo 'url' é obrigatório"
+                });
+            }
+
             const originalUrl = req.body?.url;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/';
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/shorten/';
             const shortener = new Shorturly();
             shortener.baseUrl = baseUrl;
             const shortUrl = shortener.shortenUrl(originalUrl);
@@ -25,11 +21,15 @@ const shortlink = {
             await shortLinkEntity.add(originalUrl,shortUrl); 
             
             return res.status(201).json({
-                message:{
-                    url:shortUrl
-                }
-            })
+                message:[
+                    {
+                        url:shortUrl,
+                    }    
+                ]
+            });
+
         } catch (error) {
+
             return res.status(500).json({
                 error: "Erro ao criar link"
             });
@@ -61,7 +61,7 @@ const shortlink = {
 
         const dateCreate = req.params?.date_create;
         res.status(200).json({
-            message:await shortLinkEntity.findParams(dateCreate)
+            message:await shortLinkEntity.findDate(dateCreate)
         });
 
     },
@@ -82,7 +82,7 @@ const shortlink = {
             }
 
             const originalUrl = req.body?.url;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/';
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/shorten/';
             const shortener = new Shorturly();
             shortener.baseUrl = baseUrl;
             const shortUrl = shortener.shortenUrl(originalUrl);
@@ -112,11 +112,12 @@ const shortlink = {
             }
     
             const url = req.params?.url;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/';
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/shorten/';
             const link = await shortLinkEntity.find('url_short',baseUrl+url);
             return res.redirect(302, link[0].url_original);
 
         } catch (error) {
+
             return res.status(500).json({
                 error: "Erro ao processar redirecionamento"
             });

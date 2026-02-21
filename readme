@@ -1,0 +1,60 @@
+# 🔗 API Encurtador de URL (RESTful)
+
+Uma API robusta para gerenciamento e criação de URLs encurtadas, desenvolvida com foco em performance e organização de dados.
+
+## 🚀 Tecnologias e Dependências
+
+O projeto utiliza as seguintes tecnologias do ecossistema Node.js:
+
+- **Express 5.x**: Framework web de última geração.
+- **MySQL2**: Driver de alta performance para banco de dados.
+- **Shorturly**: Biblioteca para geração de hashes únicos para as URLs.
+- **Dotenv**: Gerenciamento seguro de variáveis de ambiente.
+- **Nodemon**: Reinicialização automática do servidor durante o desenvolvimento.
+
+---
+
+## 🛠️ Instalação e Execução
+
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/desen-eduardo/api-encurtado-url.git](https://github.com/desen-eduardo/api-encurtado-url.git) 
+
+2. **Instale as dependências:**
+```bash
+npm install
+```
+
+3. **Configure as Variáveis de Ambiente:**
+Crie um arquivo .env na raiz do projeto com as credenciais do seu banco de dados:
+
+DB_NAME=banco
+DB_PASSWD=senha
+DB_USER=usuario
+DB_HOST=localhost
+DB_PORT=3306
+BASE_URL=http://localhost:3000/
+PORT=3000 
+
+4. **Inicie o servidor:**
+```bash
+# Modo Desenvolvimento
+npm run dev
+
+# Modo Produção
+npm start
+```
+
+5. **SQL do banco de dados MySql**
+```bash
+-- 1. Cria o banco de dados
+CREATE DATABASE db_short_link;
+
+USE db_short_link;
+
+CREATE TABLE IF NOT EXISTS links (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    url_original TEXT NOT NULL,
+    url_short VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,11 +1,6 @@
 import getConnection from "../database/getConnection.js";
 
 const shortLinkEntity = {
-    async all() {
-        const sql = `SELECT * FROM links`;
-        const [rows] = await getConnection.execute(sql);
-        return rows;
-    },
 
     async find(type, value) {
         const sql = `SELECT * FROM links WHERE ${type} = ?`;
@@ -13,7 +8,7 @@ const shortLinkEntity = {
         return rows;
     },
 
-    async findParams(value) {
+    async findDate(value) {
         const sql = `SELECT * FROM links WHERE DATE_FORMAT(created_at,'%Y-%m-%d') = ?`;
         const [rows] = await getConnection.execute(sql,[value]);
         return rows;
@@ -24,9 +19,9 @@ const shortLinkEntity = {
         return await getConnection.execute(sql, [url_original,url_short]);
     },
 
-    async update(original_url,short_url,id) {
+    async update(url_original, url_short,id) {
         const sql = `UPDATE links SET url_original = ? ,url_short = ? WHERE id = ?`;
-        return await getConnection.execute(sql, [original_url,short_url,id]);
+        return await getConnection.execute(sql, [url_original, url_short,id]);
     }
 }
 
