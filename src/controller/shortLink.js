@@ -13,9 +13,9 @@ const shortlink = {
             }
 
             const originalUrl = req.body?.url;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/shorten/';
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/';
             const shortener = new Shorturly();
-            shortener.baseUrl = baseUrl;
+            shortener.baseUrl = baseUrl+'shorten/';
             const shortUrl = shortener.shortenUrl(originalUrl);
             
             await shortLinkEntity.add(originalUrl,shortUrl); 
@@ -82,9 +82,9 @@ const shortlink = {
             }
 
             const originalUrl = req.body?.url;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/shorten/';
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/';
             const shortener = new Shorturly();
-            shortener.baseUrl = baseUrl;
+            shortener.baseUrl = baseUrl+'shorten/';
             const shortUrl = shortener.shortenUrl(originalUrl);
             
             const id = req.params?.id;
@@ -112,8 +112,8 @@ const shortlink = {
             }
     
             const url = req.params?.url;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/shorten/';
-            const link = await shortLinkEntity.find('url_short',baseUrl+url);
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000/';
+            const link = await shortLinkEntity.find('url_short',baseUrl+'shorten/'+url);
             return res.redirect(302, link[0].url_original);
 
         } catch (error) {
