@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS links (
 
 6. **Endpoints da API**
 MétodoRotaDescrição
-POST /shorten/create Cria uma nova URL encurtada.
+POST /shorten Cria uma nova URL encurtada.
 GET /shorten/id/:id Busca detalhes de uma URL pelo ID.
 PUT /shorten/id/:id Atualiza a URL original de um registro.
 GET /shorten/:url Redireciona para a URL original.
