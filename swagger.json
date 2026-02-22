@@ -1,0 +1,332 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Encurtador de URL",
+    "version": "1.0.0",
+    "description": "API para criação, consulta, atualização e redirecionamento de links encurtados."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/shorten": {
+      "post": {
+        "summary": "Criar link encurtado",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShortLink"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Link criado com sucesso",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/CreateResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/ValidationError"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/InternalError"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/shorten/id/{id}": {
+      "get": {
+        "summary": "Buscar link pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Link encontrado",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/FindResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/ParamError"
+              }
+            }
+          }
+        }
+      },
+
+      "put": {
+        "summary": "Atualizar link pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/CreateShortLink"
+                },    
+                "example": {
+                    "url": "https://google.com.br"
+                }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/FindResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/ValidationError"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/InternalError"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/shorten/date/{date_create}": {
+      "get": {
+        "summary": "Buscar links por data de criação",
+        "parameters": [
+          {
+            "name": "date_create",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example":"2026-02-21"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de links encontrados",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/FindResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/ParamError"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/shorten/{url}": {
+      "get": {
+        "summary": "Redirecionar para URL original",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirecionamento realizado"
+          },
+          "400": {
+            "description": "Parâmetro obrigatório não informado",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/ParamError"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/InternalError"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+
+      "CreateShortLink": {
+        "type": "object",
+        "required": ["url"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://google.com"
+          }
+        }
+      },
+
+      "CreateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "example": "http://localhost:3000/shorten/abc123"
+                }
+              }
+            }
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 201
+          }
+        }
+      },
+
+      "FindResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "object"
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 200
+          }
+        }
+      },
+
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "O campo obrigatório no corpo da requisição."
+          },
+          "message": {
+            "type": "string",
+            "example": "O campo 'url' é obrigatório no corpo da requisição."
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 400
+          }
+        }
+      },
+
+      "ParamError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Parâmetro obrigatório não informado."
+          },
+          "message": {
+            "type": "string",
+            "example": "O parâmetro é obrigatório na URL."
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 400
+          }
+        }
+      },
+
+      "InternalError": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "INTERNAL_SERVER_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "example": "Ocorreu um erro interno."
+              }
+            }
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 500
+          }
+        }
+      }
+
+    }
+  }
+}
