@@ -6,6 +6,7 @@ Uma API robusta para gerenciamento e criação de URLs encurtadas, desenvolvida 
 
 O projeto utiliza as seguintes tecnologias do ecossistema Node.js:
 
+- **NodeJS 24.x**: Tecnologia Javascript.
 - **Express 5.x**: Framework web de última geração.
 - **MySQL2**: Driver de alta performance para banco de dados.
 - **Shorturly**: Biblioteca para geração de hashes únicos para as URLs.
